@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-policies
+
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: demo-policies
+  namespace: demo-policies
+spec:
+  limits:
+  - max:
+      cpu: "800m"
+      memory: "1Gi"
+    min:
+      cpu: "100m"
+      memory: "99Mi"
+    default:
+      cpu: "700m"
+      memory: "900Mi"
+    defaultRequest:
+      cpu: "110m"
+      memory: "111Mi"
+    type: Container
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-policies
+  namespace: demo-policies
+spec:
+  containers:
+  - name: busybox-cnt01
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo hello from cnt01; sleep 10;done"]
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "200Mi"
+        cpu: "500m"
+  - name: busybox-cnt02
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo hello from cnt02; sleep 10;done"]
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+  - name: busybox-cnt03
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo hello from cnt03; sleep 10;done"]
+    resources:
+      limits:
+        memory: "200Mi"
+        cpu: "500m"
+  - name: busybox-cnt04
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo hello from cnt04; sleep 10;done"]
+  #- name: busybox-cnt05
+  #  image: busybox
+  #  command: ["/bin/sh"]
+  #  args: ["-c", "while true; do echo hello from cnt04; sleep 10;done"]
+  #  resources:
+  #    requests:
+  #      memory: "80Mi"
+  #      cpu: "90m"
+  #- name: busybox-cnt06
+  #  image: busybox
+  #  command: ["/bin/sh"]
+  #  args: ["-c", "while true; do echo hello from cnt04; sleep 10;done"]
+  #  resources:
+  #    requests:
+  #      memory: "1Gi"
+  #      cpu: "800m"

@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-app
+  namespace: example
+  labels:
+    app: example-app
+spec:
+  containers:
+    - name: example-container
+      image: hashicorp/http-echo
+      args:
+        - "-text=example"
+        - "-listen=:2020"
