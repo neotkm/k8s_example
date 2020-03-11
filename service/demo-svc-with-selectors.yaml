@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  svc-selector-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-selector-app
+  labels:
+    app: svc-selector-app
+  namespace: svc-selector-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    #type: Recreate
+    #rollingUpdate:
+      #maxSurge: 25%
+      #maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: svc-selector-app
+  template:
+    metadata:
+      labels:
+        app: svc-selector-app
+    spec:
+      containers:
+      - name: svc-selector-app
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2020"
+          - name: MESSAGE
+            value: "svc-selector-app"
+        #imagePullPolicy: Always
+        #imagePullPolicy: Never
+        #imagePullPolicy: IfNotPresent
+
+      #restartPolicy: Always
+
+      #imagePullSecrets:
+      #  - name: myregistrykey
+
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: svc-selector-app
+  name: svc-selector-app
+spec:
+  selector:
+    app: svc-selector-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 2020

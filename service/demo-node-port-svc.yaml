@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  node-port-svc-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-port-svc-app
+  labels:
+    app: node-port-svc-app
+  namespace: node-port-svc-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    #type: Recreate
+    #rollingUpdate:
+      #maxSurge: 25%
+      #maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: node-port-svc-app
+  template:
+    metadata:
+      labels:
+        app: node-port-svc-app
+    spec:
+      containers:
+      - name: node-port-svc-app
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2021"
+          - name: MESSAGE
+            value: "node-port-svc"
+        imagePullPolicy: IfNotPresent
+
+      #restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-port-svc-app
+  namespace: node-port-svc-app
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 2021
+      port: 8080
+      nodePort: 32265
+  selector:
+    app: node-port-svc-app

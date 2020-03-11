@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  svc-headless-selector-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-headless-selector-app
+  labels:
+    app: svc-headless-selector-app
+  namespace: svc-headless-selector-app
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    #type: Recreate
+    #rollingUpdate:
+      #maxSurge: 25%
+      #maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: svc-headless-selector-app
+  template:
+    metadata:
+      labels:
+        app: svc-headless-selector-app
+    spec:
+      containers:
+      - name: svc-headless-selector-app
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2020"
+          - name: MESSAGE
+            value: "svc-headless-selector-app"
+        #imagePullPolicy: Always
+        #imagePullPolicy: Never
+        #imagePullPolicy: IfNotPresent
+
+      #restartPolicy: Always
+
+      #imagePullSecrets:
+      #  - name: myregistrykey
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: svc-headless-selector-app
+  name: svc-headless-selector-app
+spec:
+  clusterIP: None
+  selector:
+    app: svc-headless-selector-app
+  ports:
+    - protocol: TCP
+      port: 2020

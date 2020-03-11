@@ -1,0 +1,64 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-svc-multiport-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-svc-multiport-app
+  labels:
+    app: demo-svc-multiport-app
+  namespace: demo-svc-multiport-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    #type: Recreate
+    #rollingUpdate:
+      #maxSurge: 25%
+      #maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: demo-svc-multiport-app
+  template:
+    metadata:
+      labels:
+        app: demo-svc-multiport-app
+    spec:
+      containers:
+      - name: demo-svc-multiport-app-2023
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2023"
+          - name: MESSAGE
+            value: "demo-svc-multiport-app-2023"
+      - name: demo-svc-multiport-app-2024
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2024"
+          - name: MESSAGE
+            value: "demo-svc-multiport-app-2"
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: demo-svc-multiport-app
+  name: demo-svc-multiport-app
+spec:
+  selector:
+    app: demo-svc-multiport-app
+  ports:
+    - name: port-2023
+      protocol: TCP
+      port: 8023
+      targetPort: 2023
+    - name: port-2024
+      protocol: TCP
+      port: 8024
+      targetPort: 2024

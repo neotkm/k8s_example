@@ -1,0 +1,58 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-svc-external-ips-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-svc-external-ips-app
+  labels:
+    app: demo-svc-external-ips-app
+  namespace: demo-svc-external-ips-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    #type: Recreate
+    #rollingUpdate:
+      #maxSurge: 25%
+      #maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: demo-svc-external-ips-app
+  template:
+    metadata:
+      labels:
+        app: demo-svc-external-ips-app
+    spec:
+      containers:
+      - name: demo-svc-external-ips-app
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2026"
+          - name: MESSAGE
+            value: "demo-svc-external-ips-app"
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: demo-svc-external-ips-app
+  name: demo-svc-external-ips-app
+spec:
+  selector:
+    app: demo-svc-external-ips-app
+  ports:
+    - name: port-2026
+      protocol: TCP
+      port: 8026
+      targetPort: 2026
+  externalIPs:
+    - 10.10.20.7
+    - 10.10.20.9
+    
