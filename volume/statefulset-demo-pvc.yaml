@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: statefulset-demo-pvc
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-demo-pvc
+  labels:
+    app: statefulset-demo-pvc
+  namespace: statefulset-demo-pvc
+spec:
+  serviceName: statefulset-demo-pvc
+  replicas: 5
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: statefulset-demo-pvc
+  template:
+    metadata:
+      labels:
+        app: statefulset-demo-pvc
+    spec:
+      containers:
+      - name: statefulset-demo-pvc
+        image: neotkm/pod-healthcheck:v0.03
+        volumeMounts:
+        - name: statefulset-pvc
+          mountPath: /demo-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: statefulset-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Mi
