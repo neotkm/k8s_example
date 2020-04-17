@@ -12,7 +12,7 @@ metadata:
   namespace: demo-policies
 spec:
   hard:
-    pods: "14"
+    pods: "15"
     secrets: "3"
     requests.cpu: "1"
     requests.memory: "1Gi"
@@ -28,7 +28,7 @@ metadata:
     app: demo-policies
   namespace: demo-policies
 spec:
-  replicas: 10
+  replicas: 6
   strategy:
     type: RollingUpdate
   selector:
@@ -59,7 +59,7 @@ metadata:
     app: demo-policies-2
   namespace: demo-policies
 spec:
-  replicas: 10
+  replicas: 5
   strategy:
     type: RollingUpdate
   selector:
@@ -80,3 +80,27 @@ spec:
           limits:
             cpu: 0.1
             memory: 100Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-policies-3
+  labels:
+    app: demo-policies-3
+  namespace: demo-policies
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: demo-policies-3
+  template:
+    metadata:
+      labels:
+        app: demo-policies-3
+    spec:
+      containers:
+      - name: demo-policies-3
+        image: neotkm/pod-healthcheck:v0.03
