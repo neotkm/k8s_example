@@ -30,7 +30,7 @@
 `kubectl apply -f pod-demo.yaml`
 
 Попадаем в Pod:  
-`kubectl exec -it -n pod-demo pod-demo – sh`  
+`kubectl exec -it -n pod-demo pod-demo sh`  
 
 Удаляем Pod:  
 `kubectl delete -f pod-demo.yaml`
@@ -72,7 +72,7 @@
 `kubectl apply -f deployment-demo.yaml`
 
 Смотрим количество Pod, запущенных Deployment:  
-`kubectl get po -n  replicaset-demo`
+`kubectl get po -n  deployment-demo`
 
 Изменяем количество Pod, запущенных Deployment:  
 `kubectl scale --replicas=5 deployment -n deployment-demo deployment-demo`
