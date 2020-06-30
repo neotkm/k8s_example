@@ -13,7 +13,7 @@ metadata:
     app: replicaset-demo
   namespace: replicaset-demo
 spec:
-  replicas: 6
+  replicas: 3
   selector:
     matchLabels:
       app: replicaset-demo
