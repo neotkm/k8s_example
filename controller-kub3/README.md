@@ -30,7 +30,7 @@
 `kubectl apply -f pod-demo.yaml`
 
 Попадаем в Pod:  
-`kubectl exec -it -n pod-demo pod-demo sh`  
+`kubectl exec -it -n pod-demo pod-demo -- sh`  
 
 Удаляем Pod:  
 `kubectl delete -f pod-demo.yaml`
