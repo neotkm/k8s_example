@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-config-map-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-config-map
+  labels:
+    app: demo-config-map
+  namespace: demo-config-map
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: demo-config-map
+  template:
+    metadata:
+      labels:
+        app: demo-config-map
+    spec:
+      containers:
+      - name: demo-config-map
+        image: neotkm/pod-healthcheck:v0.05
+        env:
+          - name: PORT
+            value: "2020"
+          - name: MESSAGE
+            value: "demo-config-map"
+
+        imagePullPolicy: IfNotPresent
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: demo-config-map
+  name: demo-config-map
+spec:
+  selector:
+    app: demo-config-map
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 2020
