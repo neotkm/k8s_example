@@ -80,7 +80,7 @@ metadata:
     app: demo-ingress-app
 spec:
   rules:
-    - host: demo-app.course3.dtln.cloud
+    - host: example.com
       http:
         paths:
         - backend:
