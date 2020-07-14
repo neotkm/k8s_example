@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-monitoring-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: demo-monitoring-app
+  name: demo-monitoring-app
+  labels:
+    app: demo-monitoring-app
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: demo-monitoring-app
+  template:
+    metadata:
+#      annotations:
+#        prometheus.io/scrape: "true"
+#        prometheus.io/port: "8081"
+#        prometheus.io/path: "/metrics"
+      labels:
+        app: demo-monitoring-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: demo-monitoring-app
+#          image: "jeremyrickard/rps-prom"
+#          image: karthequian/prom:latest
+          image: neotkm/prom-demo:v0.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SLEEP_SECONDS
+              value: "1"
+            - name: RPS_THRESHOLD
+              value: "150"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-monitoring-app
+  namespace: demo-monitoring-app
+  labels:
+    app: demo-monitoring-app
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: http
+  selector:
+    app: demo-monitoring-app
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  namespace: monitoring
+  labels:
+    app: prometheus-operator-demo-app
+#    release: prometheus-operator
+  name: prometheus-operator-demo-app
+spec:
+  endpoints:
+  - port: http
+    interval: 5s
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app: demo-monitoring-app
+  namespaceSelector:
+    any: true
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-monitoring-app
+  namespace: demo-monitoring-app
+  labels:
+    app: demo-monitoring-app
+spec:
+  rules:
+    - host: mon.example.com
+      http:
+        paths:
+        - backend:
+            serviceName: demo-monitoring-app
+            servicePort: 8081
