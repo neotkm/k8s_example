@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-pod-log-4
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-pod-log-4
+  labels:
+    app: demo-pod-log-4
+  namespace: demo-pod-log-4
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo-pod-log-4
+  template:
+    metadata:
+      labels:
+        app: demo-pod-log-4
+    spec:
+      containers:
+      - name: count1
+        image: busybox
+        args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date) - $(hostname)"; i=$((i+1)); sleep 1; done']
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-pod-log-4-2
+  labels:
+    app: demo-pod-log-4-2
+  namespace: demo-pod-log-4
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo-pod-log-4-2
+  template:
+    metadata:
+      labels:
+        app: demo-pod-log-4-2
+    spec:
+      containers:
+      - name: count1
+        image: busybox
+        args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date) - $(hostname)-count1"; i=$((i+1)); sleep 1; done']
+      - name: count2
+        image: busybox
+        args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date) - $(hostname)-count2"; i=$((i+1)); sleep 1; done']

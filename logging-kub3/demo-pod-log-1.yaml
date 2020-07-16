@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  demo-pod-log-1
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: demo-pod-log-1
+  name: demo-pod-log-1
+spec:
+  containers:
+  - name: count
+    image: busybox
+    args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done']
