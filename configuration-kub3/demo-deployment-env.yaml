@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-deployment-env
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment-env
+  labels:
+    app: demo-deployment-env
+  namespace: demo-deployment-env
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: demo-deployment-env
+  template:
+    metadata:
+      labels:
+        app: demo-deployment-env
+    spec:
+      containers:
+      - name: demo-deployment-env
+        image: neotkm/pod-healthcheck:v0.03
+        env:
+        - name: ENV_1
+          value: "VALUE-1"
+        - name: ENV_2
+          value: "VALUE-2"
+        - name: ENV_3
+          value: "VALUE-3"
