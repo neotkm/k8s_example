@@ -9,7 +9,7 @@
 
 --
 
-## подготовка  
+**подготовка**  
 **Устанавливаем утилиту jq** - [https://stedolan.github.io/jq/](https://stedolan.github.io/jq/) и httpd-tools  
 `sudo yum install httpd-tools jq`  
 
