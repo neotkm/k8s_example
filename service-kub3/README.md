@@ -83,8 +83,8 @@ status:
 ### Сервисы: ExternalName  
 ```
 kubectl apply -f demo-external-name-svc.yaml
-kubectl get svc -n extarnal-name-svc-app
-kubectl get ep -n extarnal-name-svc-app
+kubectl get svc -n external-name-svc-app
+kubectl get ep -n external-name-svc-app
 kubectl delete -f demo-external-name-svc.yaml
 ```
 
