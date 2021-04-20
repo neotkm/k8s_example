@@ -71,7 +71,7 @@ kubectl --kubeconfig=demo-user.kubeconfig  run -n monitoring --generator=run-pod
 ##### если версия kubectl >= v1.21.* выполняем эти команды  
 ```
 kubectl --kubeconfig=demo-user.kubeconfig  run -n demo-rbac-ns tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
-kubectl --kubeconfig=demo-user.kubeconfig  run -n monitoring --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
+kubectl --kubeconfig=demo-user.kubeconfig  run -n monitoring tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
 ```
 
 #### Удаляем неймспейс и пользователя   
