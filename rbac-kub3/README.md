@@ -53,11 +53,25 @@ kubectl config set-credentials $user --client-certificate=$user.crt --client-key
 kubectl config set-context $c --cluster=$csn --user=$user --namespace=$ns --kubeconfig=$user.kubeconfig  
 kubectl config use-context --kubeconfig=$user.kubeconfig $c  
 ```
+#### Смотрим версию kubectl  
+```
+kubectl version
+
+Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.0", GitCommit:"cb303e613a121a29364f75cc67d3d580833a7479", GitTreeState:"clean", BuildDate:"2021-04-08T16:31:21Z", GoVersion:"go1.16.1", Compiler:"gc", Platform:"darwin/arm64"}
+Server Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.4", GitCommit:"e87da0bd6e03ec3fea7933c4b5263d151aafd07c", GitTreeState:"archive", BuildDate:"2021-02-19T10:59:12Z", GoVersion:"go1.15.8", Compiler:"gc", Platform:"linux/amd64"}
+```
 
 #### Проверяем, что от созданного пользователя мы можем запустить например pod  
+##### если версия kubectl < v1.21 выполняем эти команды  
 ```
 kubectl --kubeconfig=demo-user.kubeconfig  run -n demo-rbac-ns --generator=run-pod/v1 tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
 kubectl --kubeconfig=demo-user.kubeconfig  run -n monitoring --generator=run-pod/v1 tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
+```
+
+##### если версия kubectl >= v1.21.* выполняем эти команды  
+```
+kubectl --kubeconfig=demo-user.kubeconfig  run -n demo-rbac-ns tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
+kubectl --kubeconfig=demo-user.kubeconfig  run -n monitoring --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
 ```
 
 #### Удаляем неймспейс и пользователя   
