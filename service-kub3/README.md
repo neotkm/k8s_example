@@ -18,6 +18,7 @@
 kubectl apply -f demo-svc-without-selectors.yaml
 kubectl get svc -n svc-without-selector-app  
 kubectl get ep -n svc-without-selector-app  
+kubectl get po -n svc-without-selector-app -o wide
 kubectl delete -f demo-svc-without-selectors.yaml
 ```  
 
@@ -25,6 +26,7 @@ kubectl delete -f demo-svc-without-selectors.yaml
 kubectl apply -f demo-svc-with-selectors.yaml
 kubectl get svc -n svc-selector-app
 kubectl get ep -n svc-selector-app
+kubectl get po -n svc-selector-app -o wide
 kubectl delete -f demo-svc-with-selectors.yaml
 ```
 
@@ -124,6 +126,8 @@ kubectl get ing -n demo-ingress-app
 Используем для управления контейнерами в поде контейнер netshoot (https://github.com/nicolaka/netshoot). Запускаем в нём консоль и выясняем внешний адрес кластера, чтобы отправлять на него запросы.
 ```
 kubectl run --generator=run-pod/v1 tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
+или
+kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash  
 export ip=`curl -s ifconfig.io`
 echo $ip  
 ```
