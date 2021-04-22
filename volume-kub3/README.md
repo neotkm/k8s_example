@@ -48,6 +48,19 @@ kubectl delete -f  demo-hostpath-volume.yaml
 --
 ### Volume: Local   
 ```
+выбираем любой воркер, его имя указано в первом столбце
+
+kubectl get nodes
+
+у меня так, у Вас само собой будут другие:
+NAME        STATUS   ROLES    AGE   VERSION
+test21-s1   Ready    <none>   38d   v1.20.4
+test21-s2   Ready    <none>   38d   v1.20.4
+test21-s3   Ready    <none>   38d   v1.20.4
+test21-s4   Ready    <none>   38d   v1.20.4
+test21-s5   Ready    <none>   38d   v1.20.4
+
+
 kubectl apply -f demo-local-volume-pv.yaml
 kubectl get pv
 kubectl describe pv local-pv
