@@ -47,9 +47,9 @@ kubectl delete -f  demo-hostpath-volume.yaml
 
 --
 ### Volume: Local   
-```
-выбираем любой воркер, его имя указано в первом столбце
 
+#### выбираем любой воркер, его имя указано в первом столбце
+```
 kubectl get nodes
 
 у меня так, у Вас само собой будут другие:
@@ -59,8 +59,32 @@ test21-s2   Ready    <none>   38d   v1.20.4
 test21-s3   Ready    <none>   38d   v1.20.4
 test21-s4   Ready    <none>   38d   v1.20.4
 test21-s5   Ready    <none>   38d   v1.20.4
+```  
 
-
+Правим demo-local-volume-pv.yaml  
+```
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - ИМЯ_ВОРКЕРА
+```  
+####У меня выглядит так:  
+```
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - test21-s4
+```  
+####После этого создаем PV, PVC, POD и проверяем их работу:  
+```
 kubectl apply -f demo-local-volume-pv.yaml
 kubectl get pv
 kubectl describe pv local-pv
@@ -88,6 +112,7 @@ kubectl get po -o wide
 
 kubectl exec -it demo-local-volume-pod -- sh  
 cat /test-pv/test.txt  
+exit
 
 kubectl delete -f demo-local-volume-pod.yaml  
 kubectl delete -f demo-local-volume-pvc.yaml  
