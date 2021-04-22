@@ -62,7 +62,7 @@ test21-s4   Ready    <none>   38d   v1.20.4
 test21-s5   Ready    <none>   38d   v1.20.4
 ```  
 
-#### Правим demo-local-volume-pv.yaml  
+#### Правим в demo-local-volume-pv.yaml секцию nodeAffinity, в values указываем имя своего воркера  
 ```
   nodeAffinity:
     required:
@@ -85,7 +85,7 @@ test21-s5   Ready    <none>   38d   v1.20.4
           values:
           - test21-s4
 ```  
-#### После этого создаем PV, PVC, POD и проверяем их работу:  
+#### После этого создаем PV, PVC, StorageClass, POD и проверяем их работу:  
 ```
 kubectl apply -f demo-local-volume-pv.yaml
 kubectl get pv
