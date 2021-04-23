@@ -101,8 +101,19 @@ kubectl describe pvc local-pvc
 
 
 kubectl apply -f demo-local-volume-pod.yaml
+kubectl get po  
 kubectl describe po demo-local-volume-pod
+```
 
+#### Хм, что-то пошло не так? Давайте попробуем исправить  
+```
+kubectl apply -f demo-create-local-volume-ds.yaml
+kubectl get po -w
+kubectl describe po demo-local-volume-pod
+```
+
+#### Продолжаем  
+```
 kubectl exec -it demo-local-volume-pod -- sh  
 echo "test" > /test-pv/test.txt  
 cat /test-pv/test.txt  
