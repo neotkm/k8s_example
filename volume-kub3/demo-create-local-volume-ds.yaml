@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: create-local-volume
+spec:
+  selector:
+    matchLabels:
+      app: create-local-volume
+  template:
+    metadata:
+      labels:
+        app: create-local-volume
+    spec:
+      containers:
+      - name: create-local-volume
+        image: busybox:1.28
+        command: ['sh', '-c', 'echo creating dir; ls -lh /tmp/local-volume || mkdir /tmp/local-volume; while sleep 3600; do :; done']
+        volumeMounts:
+          - mountPath: /tmp
+            name: host-tmp-dir
+      volumes:
+        - name: host-tmp-dir
+          hostPath:
+            path: /tmp
+            type: Directory

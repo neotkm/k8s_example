@@ -16,3 +16,4 @@ spec:
       path: /tmp/demo-hostpath-kub
       # this field is optional
       type: Directory
+      #type: DirectoryOrCreate
