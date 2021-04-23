@@ -34,14 +34,18 @@ kubectl delete -f demo-emptydir-volume-ram.yaml
 kubectl apply -f demo-hostpath-volume.yaml
 kubectl get po
 kubectl describe po -n default demo-hostpath-volume
-kubectl --kubeconfig=config delete -f demo-hostpath-volume.yaml
+
 kubectl exec -it demo-hostpath-volume sh  
-ls -lh /test-pd/  
-echo "test_data" > /test-pd/test-pd.txt  
+ls -lh /test-dir/  
+echo "test_data" > /test-dir/test-pd.txt  
+exit
+
 kubectl delete -f  demo-hostpath-volume.yaml  
 kubectl apply -f demo-hostpath-volume.yaml  
 kubectl exec -it demo-hostpath-volume sh  
-ls -lh /test-pd/  
+ls -lh /test-dir/  
+exit
+
 kubectl delete -f  demo-hostpath-volume.yaml
 ```
 
@@ -115,6 +119,8 @@ kubectl describe po demo-local-volume-pod
 #### Продолжаем  
 ```
 kubectl exec -it demo-local-volume-pod -- sh  
+ls -lh /test-pv/
+cat /test-pv/init.log
 echo "test" > /test-pv/test.txt  
 cat /test-pv/test.txt  
 exit  
@@ -124,6 +130,8 @@ kubectl apply -f demo-local-volume-pod.yaml
 kubectl get po -o wide  
 
 kubectl exec -it demo-local-volume-pod -- sh  
+ls -lh /test-pv/
+cat /test-pv/init.log
 cat /test-pv/test.txt  
 exit
 
@@ -132,16 +140,16 @@ kubectl delete -f demo-local-volume-pvc.yaml
 kubectl get pv  
 kubectl describe pv local-pv  
 kubectl delete -f demo-local-volume-pv.yaml  
+kubectl delete -f demo-local-storage-class.yaml
+kubectl delete -f demo-create-local-volume-ds.yaml  
 ```  
 
 --
 ### Volume: PVC & StatefulSet    
 ```
-kubectl apply -f statefulset-demo-pvc.yaml
-kubectl get po -n statefulset-demo-pvc
-kubectl get pv
-kubectl get pvc -n statefulset-demo-pvc
+kubectl apply -f statefulset-demo-pvc.yaml  
+kubectl get po -n statefulset-demo-pvc  
+kubectl get pv  
+kubectl get pvc -n statefulset-demo-pvc  
 kubectl delete -f statefulset-demo-pvc.yaml
-
 ```
-

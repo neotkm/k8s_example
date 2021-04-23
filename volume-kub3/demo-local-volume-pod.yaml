@@ -6,7 +6,7 @@ spec:
   initContainers:
     - name: create-file
       image: busybox:1.28
-      command: ['sh', '-c', 'echo creating dir; echo INIT OK > /tmp/init.log; sleep 2;']
+      command: ['sh', '-c', 'echo creating dir; echo `date` INIT OK >> /tmp/init.log; sleep 2;']
       volumeMounts:
       - mountPath: /tmp
         name: local-pv
