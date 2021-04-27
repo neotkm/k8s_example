@@ -73,7 +73,12 @@ am-pass - заменить на Ваш пароль
 
 ### 3. Получим доступ к метрикам, которые отдает Kubelet  
 Создаем Pod, c прокинутым в него сервис аккаунтом, для доступа к Kubelet  
-`kubectl run --generator=run-pod/v1 get-metrics --rm -i --tty -n monitoring --overrides='{"spec":{"serviceAccountName":"prometheus-operator-prometheus"}}' --image nicolaka/netshoot -- /bin/bash `  
+`kubectl get sa -n monitoring `  
+
+`kubectl run --generator=run-pod/v1 get-metrics --rm -i --tty -n monitoring --overrides='{"spec":{"serviceAccountName":"prometheus-operator-kube-p-prometheus"}}' --image nicolaka/netshoot -- /bin/bash `  
+
+Или
+`kubectl run get-metrics --rm -i --tty -n monitoring --overrides='{"spec":{"serviceAccountName":"prometheus-operator-kube-p-prometheus"}}' --image nicolaka/netshoot -- /bin/bash `  
 
 Выполним запрос к метрикам cadvisor, которые отдает Kubelet  
 ```curl -v -s -k -H "Authorization: Bearer `cat /var/run/secrets/kubernetes.io/serviceaccount/token`" https://10.10.20.7:10250/metrics/cadvisor```  
@@ -86,11 +91,9 @@ am-pass - заменить на Ваш пароль
 `kubectl apply -f demo-monitoring.yaml`
 
 ```
-kubectl get po -A -o wide
-curl %pod-ip%:8081/hello
-curl %pod-ip%:8081/metrics | grep hello_calls
+kubectl get po -n demo-monitoring-app -o wide
 
-kubectl run --generator=run-pod/v1 tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
+kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
 
 export ip=`curl -s ifconfig.io`
 echo $ip  
@@ -125,30 +128,4 @@ rate(nginx_ingress_controller_requests{status="200"}[5m])
 rate(nginx_ingress_controller_requests{status=~"4.*"}[5m])
 
 
-http_requests_total{job="prometheus", code="200"}
-http_requests_total{status_code=~"2.*"}
-
 ```  
-
-### 6. Prom Operator TIPS & TRICKS
-
-Правим [values.yaml](https://raw.githubusercontent.com/helm/charts/master/stable/prometheus-operator/values.yaml)  
-Добавляем в Grafana plugins:  
-
-```
-  plugins:
-    - grafana-piechart-panel
-```  
-
-Добавляем в Grafana dashboards:  
-
-```
-  dashboards:
-    default:
-      local-dashboard:
-        url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
-```  
-
-Добавляем ScrapeConfigs:   
-![additionalScrapeConfigs.png](additionalScrapeConfigs.png)  
-
